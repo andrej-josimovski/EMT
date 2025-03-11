@@ -48,7 +48,7 @@ public class AuthorController {
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         if (authorService.findById(id).isPresent()) {
             authorService.deleteById(id);
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.ok().build();
         }
         return ResponseEntity.notFound().build();
     }

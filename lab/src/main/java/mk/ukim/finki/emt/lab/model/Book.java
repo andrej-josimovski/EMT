@@ -2,6 +2,8 @@ package mk.ukim.finki.emt.lab.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Data
 @Entity
@@ -13,12 +15,14 @@ public class Book {
     @Enumerated(EnumType.STRING)
     Category category;
     @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
     Author author;
     Integer availableCopies;
 
-    public Book() {}
+    public Book() {
+    }
 
-    public Book(Author author, Integer availableCopies, Category category,String name) {
+    public Book(Author author, Integer availableCopies, Category category, String name) {
         this.author = author;
         this.availableCopies = availableCopies;
         this.category = category;
