@@ -1,8 +1,10 @@
-package mk.ukim.finki.emt.lab.model;
+package mk.ukim.finki.emt.lab.model.domain;
 
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Data
 @Entity
@@ -14,6 +16,7 @@ public class Author {
     String name;
     String surname;
     @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
     Country country;
 
     public Author() {
@@ -25,8 +28,12 @@ public class Author {
         this.surname = surname;
     }
 
-    public Country getCountry() {
-        return country;
+    public Long getId() {
+        return id;
+    }
+
+    public Long getCountry() {
+        return country.getId();
     }
 
     public String getName() {

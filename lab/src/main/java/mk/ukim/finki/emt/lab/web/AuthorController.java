@@ -1,8 +1,10 @@
 package mk.ukim.finki.emt.lab.web;
 
-import mk.ukim.finki.emt.lab.model.Author;
-import mk.ukim.finki.emt.lab.model.dto.AuthorDto;
-import mk.ukim.finki.emt.lab.service.AuthorService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import mk.ukim.finki.emt.lab.dto.CreateAuthorDto;
+import mk.ukim.finki.emt.lab.dto.DisplayAuthorDto;
+import mk.ukim.finki.emt.lab.service.application.AuthorApplicationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,44 +12,50 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/authors")
+@Tag(name = "Author API", description = "Endpoints for managing authors")
 public class AuthorController {
 
-    private final AuthorService authorService;
+    private final AuthorApplicationService authorApplicationService;
 
-    public AuthorController(AuthorService authorService) {
-        this.authorService = authorService;
+    public AuthorController(AuthorApplicationService authorApplicationService) {
+        this.authorApplicationService = authorApplicationService;
     }
 
     @GetMapping
-    public List<Author> findAll() {
-        return this.authorService.findAll();
+    @Operation(summary = "Get all authors", description = "Retrieves a list of all available authors.")
+    public List<DisplayAuthorDto> findAll() {
+        return this.authorApplicationService.findAll();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Author> findById(@PathVariable Long id) {
-        return this.authorService.findById(id)
+    @Operation(summary = "Get author by ID", description = "Finds a manufacturer by its ID.")
+    public ResponseEntity<DisplayAuthorDto> findById(@PathVariable Long id) {
+        return this.authorApplicationService.findById(id)
                 .map(a-> ResponseEntity.ok().body(a))
                 .orElseGet(()-> ResponseEntity.notFound().build());
     }
 
     @PostMapping("/add")
-    public ResponseEntity<Author> save(@RequestBody AuthorDto author) {
-        return this.authorService.save(author)
+    @Operation(summary = "Add a new author", description = "Creates a new author based on the given AuthorDto.")
+    public ResponseEntity<DisplayAuthorDto> save(@RequestBody CreateAuthorDto createAuthorDto) {
+        return this.authorApplicationService.save(createAuthorDto)
                 .map(a-> ResponseEntity.ok().body(a))
                 .orElseGet(()->ResponseEntity.badRequest().build());
     }
 
     @PutMapping("/edit/{id}")
-    public ResponseEntity<Author> update(@PathVariable Long id, @RequestBody AuthorDto author) {
-        return this.authorService.update(id, author)
+    @Operation(summary = "Update an existing author", description = "Updates a manufacturer by ID.")
+    public ResponseEntity<DisplayAuthorDto> update(@PathVariable Long id, @RequestBody CreateAuthorDto createAuthorDto) {
+        return this.authorApplicationService.update(id, createAuthorDto)
                 .map(a->ResponseEntity.ok().body(a))
                 .orElseGet(()->ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/delete/{id}")
+    @Operation(summary = "Delete an author", description = "Deletes an author by its ID.")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        if (authorService.findById(id).isPresent()) {
-            authorService.deleteById(id);
+        if (authorApplicationService.findById(id).isPresent()) {
+            authorApplicationService.deleteById(id);
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.notFound().build();

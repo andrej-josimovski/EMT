@@ -1,11 +1,10 @@
-package mk.ukim.finki.emt.lab.service.impl;
+package mk.ukim.finki.emt.lab.service.domain.impl;
 
-import mk.ukim.finki.emt.lab.model.Book;
-import mk.ukim.finki.emt.lab.model.Category;
-import mk.ukim.finki.emt.lab.model.dto.BookDto;
+import mk.ukim.finki.emt.lab.model.domain.Book;
+import mk.ukim.finki.emt.lab.model.enumerations.Category;
 import mk.ukim.finki.emt.lab.repository.BookRepository;
-import mk.ukim.finki.emt.lab.service.AuthorService;
-import mk.ukim.finki.emt.lab.service.BookService;
+import mk.ukim.finki.emt.lab.service.domain.AuthorService;
+import mk.ukim.finki.emt.lab.service.domain.BookService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -47,17 +46,17 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Optional<Book> update(Long id, BookDto book) {
+    public Optional<Book> update(Long id, Book book) {
         return bookRepository.findById(id)
                 .map(existingBook -> {
                     if (book.getName() != null){
                         existingBook.setName(book.getName());
                     }
                     if (book.getCategory() != null){
-                        existingBook.setCategory(Category.valueOf((book.getCategory())));
+                        existingBook.setCategory(book.getCategory());
                     }
-                    if (book.getAuthor() != null && authorService.findById(book.getAuthor()).isPresent()){
-                        existingBook.setAuthor(authorService.findById(book.getAuthor()).get());
+                    if (book.getAuthor() != null && authorService.findById(book.getAuthor().getId()).isPresent()){
+                        existingBook.setAuthor(authorService.findById(book.getAuthor().getId()).get());
                     }
                     if (book.getAvailableCopies() != null){
                         existingBook.setAvailableCopies(book.getAvailableCopies());
@@ -67,10 +66,10 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Optional<Book> save(BookDto book) {
-        if (book.getAvailableCopies() != null && authorService.findById(book.getAuthor()).isPresent() && book.getCategory() != null && book.getName() != null && book.getAuthor() != null){
-            Category category = Category.valueOf((book.getCategory()));
-            return Optional.of(bookRepository.save(new Book(authorService.findById(book.getAuthor()).get(), book.getAvailableCopies(), category, book.getName())));
+    public Optional<Book> save(Book book) {
+        if (book.getAvailableCopies() != null && authorService.findById(book.getAuthor().getId()).isPresent() && book.getCategory() != null && book.getName() != null && book.getAuthor() != null){
+            Category category = book.getCategory();
+            return Optional.of(bookRepository.save(new Book(authorService.findById(book.getAuthor().getId()).get(), book.getAvailableCopies(), category, book.getName())));
         }
         return Optional.empty();
     }

@@ -1,7 +1,8 @@
-package mk.ukim.finki.emt.lab.model;
+package mk.ukim.finki.emt.lab.model.domain;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import mk.ukim.finki.emt.lab.model.enumerations.Category;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -27,6 +28,10 @@ public class Book {
         this.availableCopies = availableCopies;
         this.category = category;
         this.name = name;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public Author getAuthor() {

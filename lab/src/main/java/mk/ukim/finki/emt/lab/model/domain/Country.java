@@ -1,4 +1,4 @@
-package mk.ukim.finki.emt.lab.model;
+package mk.ukim.finki.emt.lab.model.domain;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -21,6 +21,10 @@ public class Country {
     public Country(String continent,String name) {
         this.continent = continent;
         this.name = name;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getContinent() {

@@ -1,10 +1,9 @@
-package mk.ukim.finki.emt.lab.service.impl;
+package mk.ukim.finki.emt.lab.service.domain.impl;
 
-import mk.ukim.finki.emt.lab.model.Author;
-import mk.ukim.finki.emt.lab.model.dto.AuthorDto;
+import mk.ukim.finki.emt.lab.model.domain.Author;
 import mk.ukim.finki.emt.lab.repository.AuthorRepository;
-import mk.ukim.finki.emt.lab.service.AuthorService;
-import mk.ukim.finki.emt.lab.service.CountryService;
+import mk.ukim.finki.emt.lab.service.domain.AuthorService;
+import mk.ukim.finki.emt.lab.service.domain.CountryService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,7 +30,7 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public Optional<Author> save(AuthorDto author) {
+    public Optional<Author> save(Author author) {
         if (author.getCountry() != null && author.getName() != null
         && author.getSurname() != null && countryService.findById(author.getCountry()).isPresent()) {
             return Optional.of(
@@ -48,7 +47,7 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public Optional<Author> update(Long id, AuthorDto author) {
+    public Optional<Author> update(Long id, Author author) {
         return authorRepository.findById(id)
                 .map(existingAuthor ->{
                     if (author.getName() != null) {
