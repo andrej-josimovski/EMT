@@ -1,0 +1,17 @@
+services:
+  db:
+    image: postgres:17.4
+    restart: always
+    environment:
+      POSTGRES_USER: emt
+      POSTGRES_PASSWORD: emt
+      POSTGRES_DB: emt_shop
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./01-init.sql:/docker-entrypoint-initdb.d/01-init.sql
+      - ./02-views.sql:/docker-entrypoint-initdb.d/02-views.sql
+      - ./03-data.sql:/docker-entrypoint-initdb.d/03-data.sql
+    ports:
+      - 2345:5432
+volumes:
+  pgdata:
